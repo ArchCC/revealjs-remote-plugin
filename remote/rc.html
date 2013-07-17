@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RC - client and rc - RemoteAll example</title>
+    <style type="text/css">
+        @import url("css/rc.css");
+    </style>
+</head>
+<body>
+<script src="jquery-1.9.1.min.js"></script>
+<script src="remoteall.js"></script>
+<script src="jquery.mobile-1.3.1.min.js"></script>
+<script src="jquery.touchwipe.min.js"></script>
+
+<script src="head.min.js"></script>
+
+<script>
+
+    head.ready( 'socket.io.js', function() {
+        /**
+         * get params from hash
+         * @return {Object}
+         */
+        function getHashParams() {
+
+            var hashParams = {};
+            var e,
+                    a = /\+/g, // Regex for replacing addition symbol with a space
+                    r = /([^&;=]+)=?([^&;]*)/g,
+                    d = function (s) {
+                        return decodeURIComponent(s.replace(a, " "));
+                    },
+                    q = window.location.hash.substring(1);
+
+            while (e = r.exec(q))
+                hashParams[d(e[1])] = d(e[2]);
+
+            return hashParams;
+        }
+        /**
+         * prevent events for mobile
+         * @param event
+         * @return {Boolean}
+         * @private
+         */
+        function absorbEvent_(event) {
+            var e = event || window.event;
+            e.preventDefault && e.preventDefault();
+            e.stopPropagation && e.stopPropagation();
+            e.cancelBubble = true;
+            e.returnValue = false;
+            return false;
+        }
+        /**
+         * set needed sizes for RC
+         */
+        function sizeRC() {
+            var font_ratio = 1.25
+
+            $('#io_loader').hide();
+            $('#page_wrapper').show();
+
+            $('.sel-key').each(function () {
+                var kh = $(this).height();
+                $(this).css('font-size', (kh / font_ratio) + 'px')
+            })
+
+        }
+
+
+        var params = getHashParams();
+
+        /*document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                var touch = e.touches[0];
+                alert(touch.pageX + " - " + touch.pageY);
+            }, false);*/
+
+        $(document).ready(function () {
+            $(window).on('resize', sizeRC)
+            $('.sel-key, body').on('ontouchmove ontouchcancel touchend mouseup touchstart mousedown', function (event) {
+                absorbEvent_(event);
+            })
+
+            /*document.ontouchstart = function(e){ 
+                e.preventDefault(); 
+            }*/
+
+            
+
+            if (params.type == 'post') {
+
+
+                //POST RC----------------------------------------------
+                var data = null;
+                var req_url = params.host + '/emit'
+
+                var send_data = function (data) {
+                    jQuery.post(
+                            req_url,
+                            {
+                                app:params.app,
+                                session_id:params.session_id,
+                                emit_data:JSON.stringify(data)
+                            }
+                    )
+                }
+
+                sizeRC()
+                $(".sel-key").on("mouseup touchend", function (event) {
+                    $(this).removeClass('active');
+                    data = {event_name:'button_up', button_code:$(this).data('button-code')};
+                    send_data(data);
+                    return false;
+                });
+
+                $("#page_wrapper").touchwipe({
+                     wipeLeft: function() { /*alert("left");*/ data = {event_name:'button_up', button_code:'LEFT'}; send_data(data); return false; },
+                     wipeRight: function() { /*alert("right");*/ data = {event_name:'button_up', button_code:'RIGHT'}; send_data(data); return false; },
+                     wipeUp: function() { /*alert("down");*/ data = {event_name:'button_up', button_code:'DOWN'}; send_data(data); return false; },
+                     wipeDown: function() { /*alert("up");*/ data = {event_name:'button_up', button_code:'UP'}; send_data(data); return false; },
+                     min_move_x: 70,
+                     min_move_y: 70,
+                     preventDefaultEvents: true
+                });
+
+            } else {
+
+
+                //JS RC----------------------------------------------
+                var REMOTE_ALL_CONFIG = {
+                    url:params.host,
+                    appId:params.app,
+                    uniqueSessionId:params.session_id
+
+                }
+                var ra = new remoteAll(REMOTE_ALL_CONFIG, function (context, args) {
+                    sizeRC();
+                });
+
+                $(".sel-key").on("mouseup touchend", function (event) {
+                    $(this).removeClass('active');
+                    ra.sendCode({event_name:'button_up', button_code:$(this).data('button-code')});
+                    return false;
+                });
+
+                $("#page_wrapper").touchwipe({
+                     wipeLeft: function() { /*alert("left");*/ ra.sendCode({event_name:'button_up', button_code:'LEFT'}); return false; },
+                     wipeRight: function() { /*alert("right");*/ ra.sendCode({event_name:'button_up', button_code:'RIGHT'}); send_data(data); return false; },
+                     wipeUp: function() { /*alert("down");*/ ra.sendCode({event_name:'button_up', button_code:'DOWN'}); send_data(data); return false; },
+                     wipeDown: function() { /*alert("up");*/ ra.sendCode({event_name:'button_up', button_code:'UP'}); send_data(data); return false; },
+                     min_move_x: 70,
+                     min_move_y: 70,
+                     preventDefaultEvents: true
+                });
+
+            }
+
+
+        })
+
+    } );
+    head.js('http://'+window.location.hostname+':8888/socket.io/socket.io.js');
+
+</script>
+
+<div id="io_loader">Connecting1...</div>
+<div id="page_wrapper">
+    <!--div id="rc_key_RIGHT" class="sel-key" data-button-code="RIGHT">
+        &rarr;
+    </div>
+    <div id="rc_key_LEFT" class="sel-key" data-button-code="LEFT">
+        &larr;
+    </div>
+    <div id="rc_key_DOWN" class="sel-key" data-button-code="DOWN">
+        &darr;
+    </div>
+
+    <div id="rc_key_UP" class="sel-key" data-button-code="UP">
+        &uarr;
+    </div>
+
+    <div id="rc_key_ENTER" class="sel-key">
+        &raquo;
+    </div>
+    <div id="rc_key_TOOLS" class="sel-key">
+        &laquo;
+    </div-->
+
+    <div id="rc_key_CARD" class="sel-key" data-button-code="CARD">
+        C
+    </div>
+    <div id="rc_key_YQ" class="sel-key" data-button-code="YQ">
+        YQ
+    </div>
+    <div id="rc_key_WALLET" class="sel-key" data-button-code="WALLET">
+        W
+    </div>
+    <div id="rc_key_PHONE" class="sel-key" data-button-code="PHONE">
+        P
+    </div>
+
+</div>
+</body>
+</html>

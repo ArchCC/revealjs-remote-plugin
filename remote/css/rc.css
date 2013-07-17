@@ -1,0 +1,187 @@
+
+/*-----------------------------
+RESET STYLES
+-----------------------------*/
+
+html, body, form, fieldset, p, div, h1, h2, h3, h4, h5, h6{
+    margin:0;
+    padding:0;
+    -webkit-text-size-adjust:none; /* This stops the iPhone from automatically changing the size of the text when you flip the phone */
+    }
+body{
+    overflow: hidden;
+    font-size: 62.5%; /* 62.5% means 1em = 10px */
+    }
+ul, li, ol, dl, dd, dt{
+    list-style:none;
+    padding:0;
+    margin:0;
+    }
+a{
+    text-decoration:none;
+    }
+ 
+/*-----------------------------
+    SITE SPECIFIC STYLES
+-----------------------------*/
+
+body{
+    background:#fff000;
+    font-family: Helvetica; /* Helvetica is on the iPhone already, so you may as well take advantage */
+    color:#999;
+    }
+p{
+    font-size:12px;
+    padding-bottom:8px;
+    }
+a{
+    color:#fff000;
+    text-decoration:none;
+    }
+
+/*-----------------------------
+    HEADINGS
+-----------------------------*/
+
+h1{
+    display:block;
+    width:112px;
+    height:41px;
+    background-image:url(images/logo.gif);
+    text-indent:-5000px;
+    }
+
+/*-----------------------------
+    BASIC LAYOUT
+-----------------------------*/
+
+#page_wrapper{
+    background:#ff0000;
+    padding-top:900px;
+    overflow:auto;
+    }
+
+/*-----------------------------
+    ORIENTATION CLEVERNESS
+-----------------------------*/
+
+#content_left,
+#content_right,
+#content_normal,
+#content_flipped{
+    display:none;
+    }
+.show_normal,
+.show_flipped{
+    width:320px;
+    }
+.show_left,
+.show_right{
+    width:480px;
+    }
+
+.show_left #content_left,
+.show_right #content_right,
+.show_normal #content_normal,
+.show_flipped #content_flipped{
+    display:block;
+    }
+
+#rc {
+    position: absolute;
+    color: #000;
+    height: 100%;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    background: #5d5d5d;
+    display: none;
+}
+
+#io_loader {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 30px;
+}
+
+.sel-key {
+    float: left;
+    width: 240px;
+    height: 240px;
+    background: #f3eeef;
+    position: absolute;
+    cursor: pointer;
+    color: #2a2728;
+    overflow: hidden;
+    text-align: center;
+}
+
+.sel-key.active {
+    background: #298cff !important;
+    color: white;
+}
+
+#rc_key_UP {
+    left: 16%;
+    top: 9.7%;
+}
+
+#rc_key_LEFT {
+    left: 2%;
+    top: 36.7%;
+}
+
+#rc_key_RIGHT {
+    left: 30%;
+    top: 36.7%;
+}
+
+#rc_key_DOWN {
+    left: 16%;
+    top: 63.7%;
+}
+
+#rc_key_CARD {
+    left: 0%;
+    bottom: 0%;
+    background: #6ccbff;
+}
+
+#rc_key_YQ {
+    left: 25%;
+    bottom: 0%;
+    background: #ffef83;
+}
+
+#rc_key_WALLET {
+    left: 50%;
+    bottom: 0%;
+    background: #75ffa6;
+}
+
+#rc_key_PHONE {
+    left: 75%;
+    bottom: 0%;
+    background: #ffb88d;
+}
+
+#rc_key_TOOLS {
+    left: 37%;
+    top: 75%;
+    height: 13%;
+    width: 10%;
+    background: #d8d6d5;
+}
+
+#rc_key_ENTER {
+    left: 49%;
+    top: 75%;
+    height: 13%;
+    width: 10%;
+    background: #d8d6d5;
+}
+
